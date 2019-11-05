@@ -1,0 +1,107 @@
+'exercice portant sur le choix d'une table
+'ouverte et d'un champ de cette table
+
+declare sub main
+declare function gettable() as smallint
+declare sub verificateur
+declare sub choix
+declare function getchamp (byval table as smallint) as smallint
+
+sub main
+	include "mapbasic.def"
+	create menu "Gere Table" as
+		"Choisir un champ"
+			helpmsg "Choisir un champ d'une table MapInfo"
+			calling choix
+	alter menu bar add "Gere Table"
+end sub
+
+'procédure permettant de choisir une table ouverte
+function gettable() as smallint
+	dim i as smallint
+	dim choixt,tablechoisie,tableau_table(10) as string
+	'Vérification qu'il y a une table ouverte
+	if numtables()=0 
+		then note "Une table doit être ouverte !"
+	end if
+	'Sélection des tables ouvertes
+	for i=1 to numtables()
+		choixt=choixt+tableau_table(i) +";"
+	next
+	'dialogue de choix de table
+	dialog
+		title "Choix de la table"
+		control listbox
+			title choixt
+			calling verificateur
+			ID 1
+			value 1
+			into tablechoisie
+			position 10,92
+			height 40
+		control OKbutton
+			ID 2
+			disable
+		control cancelbutton
+			ID 3
+		control statictext
+			position 5,10
+			width 160
+			title "Choisissez une table :"
+	'fin du dialogue de choix de table
+	gettable=tablechoisie
+end function
+
+'procédure qui sert à sélectioné un nom de champ
+
+function getchamp(byval table as smallint) as smallint
+	dim tabchamp(50),choixch as string, i as integer, champ as smallint
+	'sélection des champs de la table
+	for i=1 to numcols(table)
+		tabchamp(i)=columninfo(table,"col"+i,COL_INFO_NAME)
+	next
+	choixch=""
+	for i=1 to numcols(table)
+		choixch=choixch+tabchamp(i) +";"
+	next
+	'dialogue de choix du champ
+	dialog
+		title "choix du champ"
+		control listbox
+			title choixch
+			calling verificateur
+			ID 1
+			into champ
+			position 10,92 
+			height 40
+		control OKbutton
+			ID 2
+			disable
+		control Cancelbutton
+			ID 3
+		control statictext
+			position 5,10
+			width 160
+			title "Choississez le champ :"
+	'fin du dialogue de choix du champ
+	getchamp=champ
+end function
+
+'procédure ki sert à apelé Gettable et Getchamp et à vérifier ce que renvoi les procédures
+sub choix
+	dim nomtable,nomchamp as string, choix1, choix2 as smallint
+	choix1=gettable()
+	choix2=getchamp(choix1)
+	nomtable=tableinfo(choix1,TAB_INFO_NAME)
+	nomchamp=columninfo(nomtable,"COL"+str$(choix2),COL_INFO_NAME)
+		nomtable=nomtable+nomchamp
+	note "le champ choisi est "+str$(nomchamp)
+end sub
+
+sub verificateur
+	if readcontrolvalue(1) then
+		alter control 2 enable
+	else
+		alter control 2 disable
+	end if
+end sub

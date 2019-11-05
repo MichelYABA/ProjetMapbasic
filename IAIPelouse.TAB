@@ -1,0 +1,15 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 3
+    IDpelouse Integer Index 1 ;
+    NomPelouse Char (100) Index 2 ;
+    Situation Char (100) ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "7e54807c-81a6-4982-8372-34eb01c041e1"
+end_metadata

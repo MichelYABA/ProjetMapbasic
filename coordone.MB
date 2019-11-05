@@ -1,0 +1,100 @@
+include "icons.def"
+include "mapbasic.def"
+include "menu.def"
+
+declare  sub main
+declare sub draw_via_button
+declare sub t_click_handle
+declare sub creebuton1
+declare sub selection
+
+sub creebuton1
+	create buttonpad "ToolBox_1" as
+		'création du bouton Sélection
+		ToolButton
+			'icon MI_ICON_ARROW
+			'calling M_TOOLS_SELECTOR
+			'helpMsg "Sélectionne les objets pour les éditer\nSelect"
+		'création du bouton Custom
+		'toolbutton
+			'icon MI_ICON_ARROW
+			'drawmode DM_CUSTOM_LINE
+			'cursor MI_CURSOR_CROSSHAIR
+			'calling selection
+			'helpmsg "Sélectionne les objets pour les éditer\nSelect"
+		ToolButton
+			Icon 8001 File "Bird.dll"
+			HelpMsg "My Own Toolutton\nMy Own Toolutton"
+			DrawMode DM_CUSTOM_POINT
+			Cursor 8001 File "Bird.dll"
+			Calling selection
+	Show
+
+end sub
+
+sub main
+	
+	create buttonpad "ToolBox_1" as
+		'création du bouton Sélection
+		'ToolButton
+			'icon MI_ICON_ARROW
+			'calling M_TOOLS_SELECTOR
+			'helpMsg "Sélectionne les objets pour les éditer\nSelect"
+		'création du bouton Custom
+		'toolbutton
+			'icon MI_ICON_LINE
+			'drawmode DM_CUSTOM_LINE
+			'cursor MI_CURSOR_CROSSHAIR
+			'calling draw_via_button
+			'helpmsg "Dessine une ligne sur une fenetre carte\nDraw Line"
+		ToolButton
+			Icon MI_ICON_ARROW  '8001 File "Bird.dll"
+			HelpMsg "My Own Toolutton\nMy Own Toolutton"
+			DrawMode DM_CUSTOM_POINT
+			'Cursor 8001 File "Bird.dll"
+			Calling draw_via_button
+
+	show
+
+	'open table IAISecteurs
+	'call t_click_handle
+end sub
+
+
+sub selection
+	dim x, y as float
+	if (windowinfo (frontwindow(), WIN_INFO_TYPE) <> WIN_MAPPER) then
+		note "Désolé !!! \n Cet outil ne peut être utilisé que sur une fenêtre carte."
+		exit sub
+	end if
+	'Determination des coordonnees de la carte où l'utilisateur a cliqué
+	x = commandinfo (CMD_INFO_X)
+	y = commandinfo (CMD_INFO_Y)
+end sub
+
+sub draw_via_button
+	dim x1, y1, x2, y2 as float
+	if (windowinfo (frontwindow(), WIN_INFO_TYPE) <> WIN_MAPPER) then
+		note "Désolé !!! \n Cet outil ne peut être utilisé que sur une fenêtre carte."
+		exit sub
+	end if
+	'Determination des coordonnees de la carte où l'utilisateur a cliqué
+	'x1 = commandinfo (CMD_INFO_X)
+	'y1 = commandinfo (CMD_INFO_Y)
+	'note "x2 = "+commandinfo (CMD_INFO_X2)
+	'note "y2 = "+commandinfo (CMD_INFO_Y2)
+	'Note "Les coordonees à l'endroit cliquées sont : "
+	'Note "X ="+x1+" ; Y ="+y1
+	note objectgeography()
+end sub
+
+'cette fonction perme de sélectionner toutes les zones ki contienne 
+'les lieu de la table IAISecteurs qd l'utilisateur clik dessus
+sub t_click_handle
+	dim fx, fy as float
+	'la procedure selchangedhandler joue aussi le mm role
+	fx = commandInfo(CMD_INFO_X)
+	fy = commandinfo(CMD_INFO_Y)
+	select * from IAISecteurs
+		where obj contains createpoint(fx,fy)
+end sub

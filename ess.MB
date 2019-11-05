@@ -1,0 +1,296 @@
+Include "Menu.DEF"
+
+
+'============================================================================
+'ZONE DECLARATIVE DES FONCTIONS, PROCEDURES, VARIABLES
+'============================================================================
+
+	'Deconnexion de la source de donnée
+	Declare Sub DisconnectBDD
+
+	'Fonction de lancemnt de l'interface d'acceuil
+	Declare Sub Accueil
+
+	'Fonction d'ouverture d'une table
+	'par utilisation d'une boite de dialogue
+	Declare Sub OpenTable
+	
+	'Ajoute une couche à la table
+	Declare Sub AddCouche	
+	
+	'Declare Sub ListTable
+
+
+'Defining Dialog Width and Height
+'This allows you to specify with and height clauses in terms of characters (i.e., Width 30dW, Height 10dH).
+'Define dW *4	'Four dialog units equals one character in width
+'Define dH *8	'Eight dialog units equals one character in height
+
+'Define AppName "Formulaires de saisie"
+
+'===========================================================================
+'===========================================================================
+' ZONE DES FONCTIONS
+'===========================================================================
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction de chargement de la source de donnée
+'----------------------------------------------------
+
+Sub DisconnectBDD
+
+Dim hdbc As Integer
+Dim chaine As String
+
+OnError GoTo error_disconnectBDD
+
+
+	'Constitution de la chaine de connexion
+	'Pour cela on concate le mot clé DLG avec le numéro de connexion
+	chaine = "DLG=" + Connexion_Number
+	
+	'Déconnecte la source de donnée
+	'hdbc = Server_Connect("ODBC", chaine)
+	Server Connexion_Number Disconnect
+
+
+error_disconnectBDD:
+	'Note "Erreur de deconnexion de la source de donnée !"
+	Exit Sub
+
+End Sub
+
+'===========================================================================
+'----------------------------------------------------
+'Affichage de la liste déroulante des tables de ma base
+'----------------------------------------------------
+Sub ListQueryTables(sz_aQueryList() as string, byval lg_QueryNOnly as logical)
+
+OnError GoTo error_OutofRange
+
+	Dim i, i_Counter as integer
+	Dim sz_QueryName(10) As String
+
+	sz_QueryName(1) = "PIECES"
+
+	sz_QueryName(2) = "SITE"
+
+	sz_QueryName(3) = "AFFECTATION"
+
+	sz_QueryName(4) = "BATIMENT"
+
+	sz_QueryName(5) = "CATEGORIE MATERIEL"
+
+	sz_QueryName(6) = "CATEGORIE OBJET"
+
+	sz_QueryName(7) = "LOCATAIRE"
+
+	sz_QueryName(8) = "MATERIEL"
+
+	sz_QueryName(9) = "NATIONAITE"
+
+	sz_QueryName(10) = "OBJET"
+
+
+	i_Counter = 0
+
+	redim sz_aQueryList(10)
+
+	for i = 1 to 10
+	
+		i_Counter = i_Counter + 1
+
+		sz_aQueryList(i_Counter) = sz_QueryName(i_Counter)
+
+	Next
+
+	redim sz_aQueryList(i_Counter)
+
+error_OutofRange:
+	Exit Sub
+
+end sub
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction de lancemnt de l'interface d'acceuil
+'----------------------------------------------------
+Sub Accueil
+
+OnError GoTo error_Home
+	
+	Call ChargerBDD
+	
+	Call MonMenu
+	
+	Call OpenTable
+	
+	Call AddCouche
+	
+	'Call ListTable
+	
+error_Home:
+	Exit Sub	
+	
+End Sub
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction de chargement d'une fenêtre d'ouverture de choix d'une table
+'----------------------------------------------------
+
+Sub OpenTable Dim NomFic As String
+
+Dim filename As String
+Dim i As Smallint
+Dim valeur As Integer
+
+OnError GoTo no_file
+
+valeur = 0
+
+'----------------------------------------------------
+'Vérifie qu'il y'a au moins une table ouverte
+'----------------------------------------------------
+	If NumTables() > 0 Then
+
+
+		'NomFic = FileOpenDlg("","","TAB","Ouvrir la Table")
+		
+		NomFic ="A:\A Etudier\SIG\final\territoire.TAB"
+		
+		'Vérifie que le fichier à bien
+		'été renseigné et n'est pas vide
+		If NomFic <> "" Then	
+			
+			'Récupère le nom de la table
+			filename = PathToTableName$(NomFic)
+			
+			'Parcours l'ensemble des tables
+			'ouvertes
+			For i = 1 to NumTables()
+				'Vérifie que le fichier est déjà ouvert
+				If (filename = TableInfo(I,TAB_INFO_NAME)) Then
+					valeur = 1
+				End If
+			Next		
+			
+			'Si le fichier n'est pas ouvert on l'ouvre
+			If valeur = 0 Then
+
+				Open Table NomFic As filename MAP From filename Position (0,0) Width 200 Height 100
+
+			'Si le fichier est déjà ouvert on
+			'lui renvoie un message lui
+			'signifiant que le fichier est déjà
+			'ouvert
+			Else
+
+				GoTo existe_files
+
+			End If
+
+		Else
+
+			GoTo no_openfile
+			
+		End If
+	
+'----------------------------------------------------
+'Vérifie qu'il n'y a aucune table ouverte
+'----------------------------------------------------
+
+	Else
+
+		'NomFic = FileOpenDlg("","","TAB","Ouvrir la Table")
+		
+		NomFic ="A:\A Etudier\SIG\final\territoire.TAB"
+		
+		'Vérifie que le fichier à bien
+		'été renseigné et n'est pas vide
+		If NomFic <> "" Then	
+			
+			'Récupère le nom de la table
+			filename = PathToTableName$(NomFic)
+			
+			'On ouvre le fichier
+			Open Table NomFic As filename MAP From filename Position (0,0) Width 200 Height 100
+
+		Else
+
+			GoTo no_openfile
+			
+		End If
+
+	End If
+
+no_file:
+	Exit Sub
+
+no_openfile:
+	Exit Sub
+
+existe_files:
+	Note "Le fichier est déjà ouvert"
+	Exit Sub
+
+End Sub
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction de superposition d'une couche sur une table
+'----------------------------------------------------
+Sub AddCouche Dim NomFic As String
+
+Dim filename As String
+
+OnError GoTo error_add
+
+	If NumTables() > 0 And NumTables() = 1 Then
+		
+		filename = TableInfo(1,TAB_INFO_NAME)
+
+		filename = filename
+
+		'NomFic = FileOpenDlg("","","TAB","Ouvrir la Table")
+		
+		NomFic ="A:\A Etudier\SIG\final\BATIMENT_srv.tab"
+		
+		'Vérifie que le fichier à bien
+		'été renseigné et n'est pas vide
+		If NomFic <> "" Then	
+			
+			'Récupère le nom de la table
+			filename = PathToTableName$(NomFic)
+			
+			'On ouvre le fichier
+			Open Table NomFic As filename
+			
+			'Ajout de la couche à la fenêtre
+			'Map en cours d'execution
+			Add Map Auto Layer filename
+		
+		'Si le fichier est vide
+		Else
+
+			GoTo no_openfile
+			
+		End If
+
+	Else
+	
+		GoTo no_table
+
+	End If
+
+error_add:
+	Exit Sub
+
+no_openfile:
+	Exit Sub
+
+no_table:
+	Exit Sub
+
+End Sub

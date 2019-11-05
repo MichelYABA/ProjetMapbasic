@@ -1,0 +1,4 @@
+(ess.mb:68) No prototype declared for Sub procedure or Function ListQueryTables. 
+(ess.mb:70) Sub procedure or Function ListQueryTables does not match Declare. 
+(ess.mb:125) Invalid Sub procedure name: ChargerBDD. 
+(ess.mb:127) Invalid Sub procedure name: MonMenu. 

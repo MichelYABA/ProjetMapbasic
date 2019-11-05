@@ -1,0 +1,379 @@
+include "mapbasic.def"
+
+global liste_region() as string
+global nb as string
+global j as smallint
+
+'declare function ch() as string
+declare sub tabledep
+declare sub tabledone
+declare sub main
+declare function gettable() as smallint
+declare sub verificateur
+declare sub choix
+declare function getchamp (byval table as smallint) as smallint
+declare sub dialogue
+declare sub NomTab
+
+sub NomTab
+dim i as integer
+dim tablo() as string
+	redim tablo (numtables())
+	for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)
+	next
+	note tablo
+	'NomTab=tablo()
+end sub
+
+sub tabledone
+	dim tablo as string
+	dim i as smallint
+	dim w_ok as logical 
+	'redim tablo (numtables())
+	'for i=1 to numtables()
+	'		tablo=tableinfo(i,TAB_INFO_NAME)
+	'		if 
+	'next
+		'if tableinfo(readcontrolvalue(1),TAB_INFO_NAME)<>"" then 
+			'for i=1 to tableinfo(readcontrolvalue(1),TAB_INFO_NUM)
+				Do Case tableinfo(readcontrolvalue(1),TAB_INFO_NAME)
+					case "IAISecteurs"
+							browse * from IAISecteurs
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"	
+							
+					case "IAIJardin"
+							browse * from IAIJardin
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+					case "AYO"
+							browse * from AYO
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+					case "IAIArbres"
+							browse * from IAIArbres
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+					case "IAIZoneDeCirculation"
+							browse * from IAIZoneDeCirculation
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+					case "IAIPelouse"
+							browse * from IAIPelouse
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+					case "IAIBatiments"
+							browse * from IAIBatiments
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+					case "IAIContour"
+							browse * from IAIContour
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							'exit sub
+						'case else
+							'Note "Données de la table Pas trouvées"					
+					end case
+			'	next
+		'end if			
+end sub
+
+sub dialogue
+	dim tab,tablo(),nb as string
+	dim i,k as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)
+			'do case tablo(i)
+			'	case "IAISecteurs"
+			'				nb="1"
+			'	case "IAIJardin"
+			'				nb="2"
+			'	case "AYO"
+			'				nb="3"
+			'	case "IAIArbres"
+			'				nb="4"
+			'	case "IAIZoneDeCirculation"
+			'				nb="5"
+			'	case "IAIPelouse"
+			'				nb="6"
+			'	case "IAIBatiments"
+			'				nb="7"			
+			'end case		
+		next
+		'tab=Nomtab()	
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		'width 300
+		'height 200
+		'position 150, 150
+		'création de la zone de liste où seront stockés les noms
+		'des tables ouvertes
+		control PopUpMenu
+			position 9,22
+			width 166
+			'height 100
+			id 1
+			'calling remplir_liste
+			title from variable tablo
+			value i
+		'création de la zone de liste où seront stockés les
+		'attributs des tables
+		'control listbox
+			'position 180,50
+			'width 60
+			'height 100
+			'id 2
+		'création des 2 zones labels "Nom des tables" et "information"
+		'control statictext
+			'position 30,30
+			'width 50
+			'id 3
+			'title "Nom des tables"
+			'show
+		'control statictext
+			'position 180,30
+			'width 50
+			'id 4
+			'title "Informations"
+			'show
+		'création bouton "Selection"
+		control Okbutton
+			title "Selection"
+			position 70,42
+			width 38
+			height 14
+			id 5
+			calling tabledone
+		'control button
+			'title "Quitter"
+			'position 113,42
+			'width 38
+			'height 14
+			'id 6	
+	end if
+	'if CommandInfo(CMD_INFO_DLG_OK)then 
+			'for i=1 to numtables()
+			'		if tablo(i)="IAISecteurs" then
+			'				browse * from IAISecteurs
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+			'				Height 10 Units "cm"	
+			'		end if
+			'		if tablo(i)="IAIJardin" then
+			'				browse * from IAIJardin
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+
+			'				Height 10 Units "cm"
+			'		end if
+			'		if tablo(i)="AYO" then
+			'				browse * from AYO
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+			'				Height 10 Units "cm"
+			'		end if
+			'		if tablo(i)="IAIArbres" then
+			'				browse * from IAIArbres
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+			'				Height 10 Units "cm"
+			'		end if
+			'		if tablo(i)="IAIZoneDeCirculation" then
+			'				browse * from IAIZoneDeCirculation
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+			'				Height 10 Units "cm"
+			'		end if
+			'		if tablo(i)="IAIPelouse" then
+			'				browse * from IAIPelouse
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+			'				Height 10 Units "cm"
+			'		end if
+			'		if tablo(i)="IAIBatiments" then
+			'				browse * from IAIBatiments
+			'				Position (5,5) Units "cm" 
+			'				width 10 Units "cm" 
+			'				Height 10 Units "cm"
+			'		end if
+			'			case else
+			'				Note "Données de la table Pas trouvées"					
+			'		end case
+			'	exit for
+			'next
+		'end if			
+end sub
+
+
+'procédure qui sert à choisir une table ouverte
+function GetTable() as smallint
+	dim i as smallint
+	dim choixT,table_choisie,tableau_table() as string
+	'Vérification qu'une table est ouverte
+	if numtables()=0 then 
+		note "Une Table doit être ouverte !"
+	end if
+	'Sélection des tables ouvertes
+	for i=1 to numtables()
+		tableau_table(i)=tableinfo(1,TAB_INFO_NAME)
+	next
+	choixT=""
+	for i=1 to numTables()
+		choixT=choixT+tableau_table(i)+";"
+	Next
+	'Choix d'une table
+	dialog
+		title "choix de la table"
+		control listbox
+			title choixT
+			calling verificateur
+			ID 1
+			value 1
+			into table_choisie
+			Position 10,92 Height 40
+		control OKButton
+			ID 2
+			Disable
+		control CancelButton
+			ID 3
+		control staticText
+			Position 5,10
+			width 160
+			Title "Choisissez une table :"
+		GetTable=Table_choisie 
+end function
+
+'Procédure qui sert ) sélectionner un nom de champ
+Function GetChamp(byval table as smallint) as smallint
+	dim tabchamp() as string
+	dim i as integer
+	dim choixch as string
+	dim champ as smallint
+	'Sélection des champs de la table
+	for i=1 to numcols(Table)
+		tabchamp(i)=columninfo(table,"col"+i,COL_INFO_NAME)
+	next
+	choixch=""
+	for i=1 to numcols(Table)
+		choixch=choixch+tabchamp(i)+";"
+	next
+	'choix du champ
+	Dialog
+		Title "Choix du Champ"
+		control listbox
+			title choixch
+			calling verificateur
+			ID 1
+			into champ
+			position 10,92 height 40
+		control OKButton
+			ID 2
+			Disable
+		control CancelButton
+			ID 3
+		control staticText
+			Position 5,10
+			width 160
+			title "Choisissez un champ :"
+	GetChamp=champ	
+end function
+
+'Procédure ki sert à appeler GetTable et GetChamp
+'et à vérifier ce que renvoient les procédures
+sub choix
+	dim nomtable,nomchamp as string
+	dim choix1,choix2 as smallint
+		choix1=gettable()
+		choix2=getchamp(choix1)
+		nomtable=tableinfo(choix1,TAB_INFO_NAME)
+		nomchamp=columninfo (NomTable,"COL"+str$(choix2),COL_INFO_NAME)
+			nomtable=nomtable+nomchamp
+		note "Le champ choisi est "+str$(nomchamp)
+end sub
+
+sub verificateur
+	if readcontrolvalue(1) then
+		alter control 2 enable
+	else
+		alter control 2 Disable
+	end if
+end sub
+ 
+sub TableDep
+	dim nomtable,tabchamp(50) as string
+	dim table,champ as smallint
+	dim i as integer
+	dim col_ID, col_precis,col_type,col_geo as alias
+	dim val_id as integer
+	dim val_precis,val_type as string
+	dim val_geo as object
+		'sélection de la table IAISecteurs par menu graphique
+		table=gettable()
+		nomtable=tableinfo(table,TAB_INFO_NAME)
+		'recherche des champs de la table sélectionnée
+		for i=1 to numcols(table)
+			tabchamp(i)=columninfo (table,"col"+i,COL_INFO_NAME)
+		next
+		'création de la table destination avec la mm structure
+		'que la table IAISecteurs
+		create Table Sect(ID integer,Precis char(1), Type char(1))
+		'création du champ "obj" en réalité le fichier .MAP
+		create map for Sect coordsys earth projection 12,12,"m",0
+		col_ID=nomtable+".ID"
+		col_Precis=Nomtable+".PRECIS"
+		col_Type=NomTable+".TYPE"
+		col_geo=NomTable+".Obj"
+		
+		fetch first from NomTable
+		While not eot(NomTable)
+			val_type=col_Type
+			if val_type="3" then
+				val_ID=col_id
+				val_PRECIS=col_precis
+				val_geo=col_geo
+				insert into Sect(ID,PRECIS,TYPE,Obj)
+				values(Val_ID,Val_PRECIS,Val_TYPE,Val_Geo)
+			end if
+			fetch next from NomTable
+		wend
+		
+		Map from Sect Position (5,5) Units "cm" width 10 Units "cm" Height 10 Units "cm"
+		Set Map Zoom Entire
+		
+		Browse * from Sect
+	
+end sub
+
+
+sub Main
+	create menu "Gérer" as
+		"Table" calling dialogue,
+		"Extraire Table" calling TableDep,
+		"Choisir un champ" calling choix
+	alter menu bar add "Gérer"
+end sub

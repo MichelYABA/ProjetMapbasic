@@ -1,0 +1,288 @@
+include "mapbasic.def"
+
+declare sub ouvrir_table
+declare sub info_tab
+declare sub remplir_liste
+declare sub main
+declare sub desactiver_liste
+declare sub desactiver_operateur
+declare sub ouvrir_carte_secteur
+declare sub information
+declare sub affiche_info
+declare sub liste
+declare sub affiche
+
+global liste_region() as string
+
+sub main
+	create menu "gestion table" as
+		"Ouvrir Table" calling ouvrir_table,
+		"information" calling info_tab,
+		"Ouvrir carte secteur" calling ouvrir_carte_secteur,
+		"Information par SQL" calling information,
+		"Voir Liste" calling liste
+	alter menu bar add "gestion table"
+end sub
+
+sub ouvrir_carte_secteur
+	open table "A:\A Etudier\FINAL2\IAISecteurs.tab" 'as regions
+	map from IAISecteurs'regions
+	set map zoom entire
+end sub
+
+sub information
+	dim nom as string
+	dim w_ok as logical
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	for i=1 to numtables()
+		nom=tableinfo(i,TAB_INFO_NAME)
+		if nom="IAISecteurs" then
+			w_ok=true
+		end if
+	next
+	if w_ok=true then
+		'sélection des secteurs et on les mets dans la table
+		'"selection"
+		redim liste_region(tableinfo(IAISecteurs,TAB_INFO_NROWS))
+		fetch first from IAISecteurs
+		for i=1 to tableinfo(IAISecteurs,TAB_INFO_NROWS)
+			liste_region(i)=IAISecteurs.TypeSecteur
+			fetch next from IAISecteurs
+		next
+		dialog
+			title "Requêtes sur les régions"
+			position 50,50
+			height 200
+			width 210
+		control statictext
+			position 30,10
+			width 60
+			id 1
+			title "régions"
+			show
+		control statictext
+			position 120,10
+			width 60
+			id 2
+			title "Opérateur"
+			show
+		control statictext
+			title "Valeur"
+			position 120, 120
+			id 3
+		control listbox
+			position 30,20
+			width 80
+			height 150
+			id 4
+			calling desactiver_operateur
+			title from variable liste_region
+			value i
+		control listbox
+			position 120,20
+			width 40
+			height 50
+			title "> ;>= ;<="
+			id 5
+			calling desactiver_liste
+		control button
+			position 120,90
+			title "Sélection"
+			id 6
+			calling affiche_info
+			width 40
+		control cancelbutton
+			title "QUITTER"
+			position 120,150
+			width 40
+			id 7
+		control edittext
+			position 120,130
+			id 8
+			width 40
+		else
+			note "La table des régions n'est pas ouverte"
+		end if
+end sub
+
+sub desactiver_operateur
+	alter control 5 value 0
+	alter control 8 value ""
+end sub
+
+sub desactiver_liste
+	alter control 4 value 0
+end sub
+
+sub affiche_info
+	dim region_choisie as string
+	dim operateur as string
+	dim valeur_pop as string
+	if readcontrolvalue(4)<>0 then
+		region_choisie=liste_region(readcontrolvalue(4))
+		select * from IAISecteurs where TypeSecteur=liste_region(readcontrolvalue(4))
+		browse * from region_choisie
+	else
+		do case readcontrolvalue(5)
+		case 1
+			operateur=">"
+		case 2
+			operateur =">="
+		case 3
+			operateur="<"
+		end case
+		valeur_pop=readcontrolvalue(8)
+		run command "select * from IAISecteurs where TypeSecteur" & operateur & valeur_pop
+	end if
+end sub
+
+sub ouvrir_table
+	dim fichier as string
+	fichier = fileopendlg("","","tab","ouvrir une table quelconque")
+	if fichier<>"" then
+		open table fichier
+	end if
+end sub
+
+sub info_tab
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)
+		next
+	'création d'un formulaire contenant un bouton quitter, 
+	'2 zones de liste et 2 labels
+	dialog
+		title "Information sur les tables ouvertes"
+		width 300
+		height 200
+		position 150, 150
+		'création de la zone de liste où seront stockés les noms
+		'des tables ouvertes
+		control listbox
+			position 30,50
+			width 60
+			height 100
+			id 1
+			calling remplir_liste
+			title from variable tablo
+			value i
+		'création de la zone de liste où seront stockés les
+		'attributs des tables
+		control listbox
+			position 180,50
+			width 60
+			height 100
+			id 2
+		'création des 2 zones labels "Nom des tables" et "information"
+		control statictext
+			position 30,30
+			width 50
+			id 3
+			title "Nom des tables"
+			show
+		control statictext
+			position 180,30
+			width 50
+			id 4
+			title "Informations"
+			show
+		'création bouton "Quitter"
+		control cancelbutton
+			title "Quitter"
+			position 110,180
+			id 5
+	end if
+end sub
+
+'procédure permettan de remplir la seconde liste en fonction de 
+'la table sélectionnée
+sub remplir_liste
+	dim i as integer
+	dim tablo() as string
+		i=0
+		redim tablo(tableinfo(readcontrolvalue(1), TAB_INFO_NCOLS))
+		for i=1 to tableinfo(readcontrolvalue(1), TAB_INFO_NCOLS)
+			tablo(i)=columninfo(readcontrolvalue(1),"col" & i,COL_INFO_NAME)
+		next
+		alter control 2 title from variable tablo
+end sub
+
+sub affiche
+	dim region_choisie as string
+	dim operateur as string
+	dim valeur_pop as string
+	
+	if readcontrolvalue(5)<>0 then
+		'region_choisie=liste_region(readcontrolvalue(5))
+		'select * from IAISecteurs where TypeSecteur=liste_region(readcontrolvalue(4))
+		browse * from selection
+	end if
+end sub
+
+
+sub liste
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)
+		next
+	'création d'un formulaire contenant un bouton quitter, 
+	'2 zones de liste et 2 labels
+	dialog
+		title "Choisir une table"
+		width 300
+		height 200
+		position 150, 150
+		'création de la zone de liste où seront stockés les noms
+		'des tables ouvertes
+		control PopupMenu
+			position 30,50
+			width 60
+			height 100
+			id 1
+			'calling affiche
+			title from variable tablo
+			value i
+		'création de la zone de liste où seront stockés les
+		'attributs des tables
+		'control listbox
+			'position 180,50
+			'width 60
+			'height 100
+			'id 2
+		'création des 2 zones labels "Nom des tables" et "information"
+		control statictext
+			position 30,30
+			width 50
+			id 3
+			title "Nom des tables"
+			show
+		'control statictext
+			'position 180,30
+			'width 50
+			'id 4
+			'title "Informations"
+			'show
+		'création bouton "Quitter"
+		control OKbutton
+			title "Selection"
+			calling affiche
+			position 110,180
+			id 5
+	end if
+end sub
+	

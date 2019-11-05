@@ -1,0 +1,19 @@
+'CE PROGRAMME PERMET DE CREER LE PROGRAMME PRINCIPAL QUI APPELLE TOUS LES
+'AUTRES PROGRAMMES QUI VONT INTERAGIR DANS L'APPLICATION MAPINFO
+
+
+Include "Fonctions_two.DEF"
+
+'SECTION DE DECLARATION DES PROCEDURES
+declare sub main
+
+'SECTION D'ECRITURE DES PROGRAMMES
+ 
+sub main
+	'alter menu bar remove "Edit","Tools","Objects","Query","Options","Map","Windows","Help"
+	'alter menu bar remove "File","Table","Map","Window"
+	call Frm_splash
+	run application "consulte.mbx"	
+	run application "manipulerDonnées.mbx"
+	'run application "gestion.mbx"
+end sub

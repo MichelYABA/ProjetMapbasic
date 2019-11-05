@@ -1,0 +1,59 @@
+Include "mapbasic.def"
+
+Declare Sub Main
+Declare Sub SelectPointsByColor()
+
+Sub Main
+	'Add a custom button to the Tools toolbar.
+	Alter ButtonPad ''Tools'' Add as
+	PushButton Calling SelectPointsByColor
+	HelpMsg "Select points of same color\nSelect By Color"
+End Sub
+
+Sub SelectPointsByColor
+	Dim i_color, i_open As Integer
+	Dim symbol_style As Symbol
+	Dim object_name, table_name As String
+
+	'Note how many tables are currently open.
+	i_open = NumTables()
+	'Determine the name of the table in use.
+	table_name = SelectionInfo(SEL_INFO_TABLENAME)
+	If table_name = "" Then
+	' ... then nothing is selected; just exit.
+	Exit Sub
+End If
+	' Exit if the selection is in a non-mappable table.
+	If Not TableInfo(table_name, TAB_INFO_MAPPABLE) Then
+		Exit Sub
+	End If
+	'See whether the selected object is a Point.
+	'If it is a Point, determine its Symbol and Color.
+	Fetch First From Selection
+	object_name = Str$(Selection.obj)
+	If object_name = "Point" Then
+		symbol_style = ObjectInfo(Selection.obj,OBJ_INFO_SYMBOL)
+		i_color = StyleAttr(symbol_style, SYMBOL_COLOR)
+	End If
+	'Accessing "Selection.obj" may have caused MapInfo Professional to
+	'open a temporary table called Query1 (or Query2...).
+	'Let’s close that table, just to be tidy.
+	If NumTables() > i_open Then
+		Close Table TableInfo(0, TAB_INFO_NAME)
+	End If
+	If object_name <> "Point" Then
+		'...the selected object isn’t a point; just exit.
+		Exit Sub
+	End If
+	'Select all the rows that contain point objects.
+	Select * From table_name
+	Where Str$(Obj) = "Point"
+	Into Color_Query_Prep NoSelect
+	'Select those point objects that have the same
+	'color as the original object selected.
+	Select * From Color_Query_Prep
+		Where
+	StyleAttr(ObjectInfo(obj,OBJ_INFO_SYMBOL),SYMBOL_COLOR)= i_color
+	Into Color_Query
+	Close Table Color_Query_Prep
+End Sub

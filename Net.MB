@@ -1,0 +1,77 @@
+Include "MAPBASIC.DEF"
+Include "MENU.DEF"
+
+'//Menu Items IDs
+'////////////////////////////////////////
+
+Define menuMain 1000
+Define table_RN 1001
+Define menuSeparator1 1002
+Define menuExit 1003
+
+Declare Sub Main
+Declare Sub table_RN_OnClick
+Declare Sub menuExit_OnClick
+
+Sub Main
+	Create Menu "&Modi RN" As
+		"Table RN" Calling table_RN_OnClick,
+		"(-",
+		"Exit&" Calling menuExit_OnClick
+	Alter Menu Bar Add "&Modi RN"
+End Sub
+
+Sub menuExit_OnClick
+	Create Menu Bar As Default
+	End Program
+End Sub
+
+Sub table_RN_OnClick
+	Dim s_filename,gs_searchfor,col,s_tab As String
+	Dim i,j,i_counter,tem As integer
+	dim w_ok as logical
+
+	'Run Menu Command 102 'M_FILE_OPEN
+	'open table "A:\A Etudier\FINAL2\IAISecteurs.tab"
+	'for i=1 to numtables()
+	'	s_filename=tableinfo(i,TAB_INFO_NAME)
+		'if nom="IAISecteurs" then
+		'	w_ok=true
+		'end if
+	'next
+	'if w_ok=true then
+
+	Dialog
+		Title "Pour la table: " 
+		Control StaticText
+			Title "Nouvelle clef de route : "
+		Control EditText
+			Value gs_searchfor
+			Into gs_searchfor
+		Control OKButton
+		Control CancelButton
+		If CommandInfo(CMD_INFO_DLG_OK) Then
+			For i = 1 to numtables()
+				s_tab=tableinfo(i,TAB_INFO_NAME)
+				i_counter = NumCols(s_tab)
+				tem=0
+				For j=1 To i_counter
+					col="Col"+ltrim$(rtrim$(str$(j)))
+					If Ucase$(ColumnInfo(s_tab,col,COL_INFO_NAME))= "NEW_RN" Then
+						tem=1
+						Exit for
+					end if
+				Next
+				If tem=0 then
+					alter Table s_tab (Add NEW_RN Char(10))
+					Commit Table s_tab
+				End if
+				Browse * From s_tab
+				Update s_tab Set NEW_RN =ltrim$(rtrim$(gs_searchfor))
+				Commit Table s_tab
+			Next
+		Else
+			Exit Sub
+		End If
+	'End if
+End Sub 

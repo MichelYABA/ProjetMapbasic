@@ -1,0 +1,279 @@
+Include "BetterNoteDialog.DEF"
+Include "Fonctions_one.DEF"
+
+'============================================================================
+'ZONE DECLARATIVE DES FONCTIONS, PROCEDURES, VARIABLES
+'============================================================================
+
+'Fonction qui détermine la période de
+'de la journée
+Declare Function DeterminePeriod() As String
+
+'Foncion de vérification de l'existence du fichier de config du password
+Declare Function DetectFile() As Logical
+
+Declare Sub Frm_authentifier
+
+Declare Sub Frm_Verify
+
+'Fonction de passage d'un
+'file d'entête à un autre
+Declare Sub Parse
+
+Declare Sub StorePassword(ByVal newPassword as String)
+
+Declare Function CheckPassword(ByVal checkPassword as String) as Logical
+
+Declare Method CreateHash Class "Authentication.PasswordHash" Lib "LoginSecurity.dll" (ByVal _password as String) as String
+
+Declare Method ValidatePassword Class "Authentication.PasswordHash" Lib "LoginSecurity.dll" (ByVal _password as String, ByVal correctHash as String) as Logical
+
+Define PASS_STORE ApplicationDirectory$() & "pw_store.txt"
+
+Dim o_title As Object
+
+Global compteur As Integer
+
+'===========================================================================
+'===========================================================================
+' ZONE DES FONCTIONS
+'===========================================================================
+
+'----------------------------------------------------
+'Création d'un texte personnalisé
+'----------------------------------------------------
+'Create Text
+	'Into Variable o_title 
+	'"Veuillez saisir votre mot de passe" 
+	'(73.5, 42.6) (73.67, 42.9)
+	'Font MakeFont("Courrier",1,14,BLACK)
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction qui vérifie l'existence du fichier
+'de configuration du mot de passe
+'----------------------------------------------------
+Function DetectFile() As Logical
+	
+	DetectFile = FileExists(PASS_STORE)
+	
+End Function
+
+'===========================================================================
+'----------------------------------------------------
+'Fenêtre de création de mot de passe
+'----------------------------------------------------
+Sub Frm_authentifier
+	
+Dim newPassword as String
+
+'OnError GoTo error_Frm_authentifier
+
+	Dialog
+		Title "GESPAT - Gestionnaire de sécurité"
+		Width 160 Height 59
+		Control StaticText
+			Id 0
+			Position 8, 8
+			Width 160 Height 8
+			Title "Veuillez saisir votre mot de passe "
+
+		Control EditText
+			Id 1
+			Position 8, 23
+			Width 128 Height 12
+			Into newPassword
+			
+		Control OKButton
+			Title "Valider"
+			Id 2
+			Position 45, 39
+			Width 51 Height 14
+		
+	If CommandInfo(CMD_INFO_DLG_OK) then
+		
+		'// store new password
+		Call StorePassword(newPassword)
+		
+	End If
+	
+	If not CommandInfo(CMD_INFO_DLG_OK) then
+	
+		GoTo error_quitfrm_authentifier
+	
+	End If
+	
+error_quitfrm_authentifier:	
+	'End Program
+	'End MapInfo
+
+'error_Frm_authentifier:
+	'End Program
+	'End MapInfo
+	
+End Sub
+'===========================================================================
+'----------------------------------------------------
+'Fonction qui récupère le mot de passe saisi
+'et l'insère dans le fichier de config
+'----------------------------------------------------
+Sub StorePassword(ByVal newPassword as String)
+
+Dim pwHash as String
+
+'OnError GoTo error_StorePassword
+
+	'// encrypt password
+	pwHash = CreateHash(newPassword)	
+	
+	'// write encrypted password to store file
+	Open File PASS_STORE for Output as #1
+	
+	Print #1, pwHash
+	
+	Close file #1
+	
+	Call MessageBox("Mot de passe enregistré avec succès !", "GESPAT - Administration", vbInformation)
+
+'error_StorePassword:
+	'End Program
+	'End MapInfo
+	
+End Sub
+'===========================================================================
+'----------------------------------------------------
+'Fonction qui vérifie la concordance du mot de passe
+'saisi avec celui contenu dans le fichier de config
+'----------------------------------------------------
+Function CheckPassword(ByVal checkPassword as String) as Logical
+	
+Dim storedHash as String
+
+	'// read stored password hash from store file
+	Open File PASS_STORE for Input as #2
+	
+	Input #2, storedHash
+	
+	Close File #2
+	
+	'// check password against stored hash and return result
+	CheckPassword = ValidatePassword(checkPassword, storedHash)
+	
+End Function
+'===========================================================================
+'----------------------------------------------------
+'Fenêtre de vérification du mot de passe
+'----------------------------------------------------
+Sub Frm_Verify
+
+Dim checkPW as String
+
+'OnError GoTo error_Frm_Verify
+	
+	Dialog
+		Title "GESPAT - Gestionnaire de sécurité"
+		Width 160 Height 59
+		
+		Control StaticText
+			Id 0
+			Position 8, 8
+			Width 160 Height 8
+			Title "Veuillez entrer votre mot de passe "
+			
+		Control EditText
+			Id 1
+			Position 8, 23
+			Width 128 Height 12
+			Into checkPW
+		
+		Control OKButton
+			Title "Valider"
+			Id 2
+			Position 45, 39
+			Width 51 Height 14
+	
+	If CommandInfo(CMD_INFO_DLG_OK) then
+		'// validate password
+		If CheckPassword(checkPW) then
+						
+			Call MessageBox(DeterminePeriod() +  Chr$(13) + "Bienvenue Dans l'Application" , " GESPAT - Accueil", vbInformation)
+			
+			Call Accueil
+			
+		Else
+			
+			compteur = compteur + 1					
+			
+			If (compteur = 3) Then
+				
+				Call MessageBox("Vous avez atteint le nombre de tentatives autorisées. "+ Chr$(13) + "Le programme va se fermer.", "GESPAT - Administration", vbCritical)
+				
+				End MapInfo
+				
+			Else
+				
+				Call MessageBox("Le mot de passe saisi n'est pas correct. Veuillez recommencer !", "GESPAT - Administration", vbExclamation)
+				
+				Dialog Preserve
+				
+			End If			
+			
+		End If
+		
+	Else
+	
+		End MapInfo
+	
+	End If
+
+'error_Frm_Verify:
+	'End Program
+	'End MapInfo
+	
+End Sub
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction qui détermine la période de
+'de la journée
+'----------------------------------------------------
+Function DeterminePeriod() As String
+
+Dim tTime as Time
+
+Dim s As Integer
+
+	tTime = CurTime()
+	
+	s = FormatTime$(tTime,"HH")
+	
+	If (s >= 7 And s <= 17) Then
+		
+		DeterminePeriod = "Bonjour "
+	
+	End If
+	
+	If (s >= 18 And s <= 24) Then
+	
+		DeterminePeriod = "Bonsoir "
+		
+	End If
+		
+End Function
+
+'===========================================================================
+'----------------------------------------------------
+'Fonction de passage d'un
+'file d'entête à un autre
+'----------------------------------------------------
+Sub Parse
+	
+OnError GoTo error_Parse
+	
+	Call Accueil
+	
+error_Parse:
+	End Program
+	End MapInfo
+	
+End Sub

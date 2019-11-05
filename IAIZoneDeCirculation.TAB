@@ -1,0 +1,17 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 5
+    IDCirc Integer Index 1 ;
+    Nom_Zone Char (60) ;
+    Couverture Char (60) Index 2 ;
+    Revêtement Char (60) ;
+    TypeZone Char (50) Index 3 ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "fd5295de-2422-46c0-b1f1-2d6649677e53"
+end_metadata

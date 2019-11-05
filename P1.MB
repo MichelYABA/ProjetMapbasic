@@ -1,0 +1,39 @@
+
+declare sub main
+declare sub ma_procedure
+declare function ma_fonction (byval x as integer) as integer
+
+type Tstagiaire
+	nom as string
+	prenom as string
+	age as smallint
+end type
+
+function ma_fonction(byval x as integer) as integer
+	ma_fonction=x*x
+end function
+
+sub ma_procedure
+	dim mavariable as integer
+		mavariable=5
+		note "valeur avant appel "+mavariable
+		mavariable=ma_fonction(mavariable)
+		note "valeur après appel "+mavariable
+end sub
+
+sub main
+	dim stagiaire as Tstagiaire
+		stagiaire.nom="Toto"
+		note "Bonjour "+stagiaire.nom
+		create menu "Menu1" as
+			"Sous-Menu 1-1",
+			"Sous-Menu 1-2"
+		create menu "Menu2" as
+			"Sous-Menu 2-1",
+			"Sous-Menu 2-2"
+				helpmsg "Petit message d'aide Sous-Menu 2-2"
+				calling ma_procedure,
+			"Sous-Menu 2-3"
+		alter menu bar add "Menu1"
+		alter menu bar add "Menu2"
+end sub

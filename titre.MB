@@ -1,0 +1,11 @@
+declare sub main
+
+sub main
+	
+	set map layer 1 label object 1
+		visibility on
+		anchor (0,85)
+		text "Carte d'IAI"
+		position center
+		font ("Arial",289,20,0)
+end sub

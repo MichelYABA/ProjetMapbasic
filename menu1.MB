@@ -1,0 +1,170 @@
+include "MAPBASIC.def"
+include "ICONS.def"
+include "MENU.def"
+include "Fonctions_one.def"
+'include "BetterNoteDialog.def"
+
+declare sub menu
+declare sub main
+declare Sub OpenData
+
+Sub menu
+
+OnError GoTo error_menu
+
+'----------------------------------------------------
+'Création d'un Sous-Menu dans la barre des menus
+'----------------------------------------------------
+
+'----------------------------------------------------
+'Création d'un Menu dans la barre des menus 'Calling OpenData,
+'----------------------------------------------------
+	Create Menu "Manipuler Données" As
+		"Insérer Données" HelpMsg "Menu pour manipulation des cartes vectorisées" Calling OpenData, 
+		"Déconnecter base" HelpMsg "Menu pour manipulation des cartes vectorisées" 'Calling DisconnectBDD
+
+'----------------------------------------------------
+
+	Alter Menu Bar Add "Manipuler Données"
+
+error_menu:
+	Exit Sub
+
+End Sub
+
+'----------------------------------------------------
+'Ouverture des tables pour édition
+'----------------------------------------------------
+Sub OpenData
+OnError GoTo error_opendata
+	' User chooses a table to manage (using a query)
+	Dim sz_aQueryList() as string	
+	Dim si_ItemPicked as smallint
+	Dim i_NoQueryTables as Integer
+	Dim sz_QueryTab As String
+	Dim chaine As String
+	
+	if numtables() = 0 then
+		' Nothing to do!
+		note "Aucune fenêtre ouverte!"
+		'Call MessageBox("Aucune fenêtre ouverte !", "GESPAT - Interface", vbInformation)
+		exit sub
+	end if
+
+	' Get list of open query tables
+	call ListQueryTables(sz_aQueryList,FALSE)
+	
+	si_ItemPicked = 1
+	
+	' Check if there is a current selection - add to list if found
+	if SelectionInfo(SEL_INFO_NROWS) > 0 Then
+		
+		i_NoQueryTables = ubound(sz_aQueryList) + 1
+
+		redim sz_aQueryList(i_NoQueryTables)
+
+		sz_aQueryList(i_NoQueryTables) = "Selection"
+
+		' Set selection to be picked by default in the dialog
+		si_ItemPicked = ubound(sz_aQueryList)
+		
+	end if
+
+
+	DIALOG
+	CONTROL StaticText
+	Title "Veuillez choisir une table à modifier :"
+	Position 5, 10 	
+		CONTROL PopUpMenu
+			POSITION 9, 22
+			WIDTH 166
+			TITLE from variable sz_aQueryList
+			VALUE si_ItemPicked
+			INTO si_ItemPicked
+		CONTROL OKButton
+			POSITION 48, 42
+			WIDTH 38 HEIGHT 14
+			TITLE "OK"
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 HEIGHT 14
+			TITLE "Annuler"	
+
+	' Did the user cancel?
+	If CommandInfo(CMD_INFO_DLG_OK) Then		
+		
+		' Read the selected table
+		sz_QueryTab = sz_aQueryList(si_ItemPicked)
+		
+		If (sz_QueryTab = "AYO") Then
+			
+			'If 
+			Server Connexion_Number Link Table "Select * from AYO" Into AYO Map From AYO
+
+		End If
+
+		If (sz_QueryTab = "IAIArbres") Then
+		
+			Server Connexion_Number Link Table "Select * from IAIArbres" Into IAIArbres Map From IAIArbres
+
+		End If
+
+		If (sz_QueryTab = "IAIBatiments") Then
+		
+			Server Connexion_Number Link Table "Select * from IAIBatiments" Into IAIBatiments Map From IAIBatiments
+
+		End If
+
+		If (sz_QueryTab = "IAIContour") Then
+		
+			Server Connexion_Number Link Table "Select * from IAIContour" Into IAIContour Map From IAIContour
+
+		End If
+
+		If (sz_QueryTab = "IAIJardin") Then
+		
+			Server Connexion_Number Link Table "Select * from IAIJardin" Into IAIJardin Map From IAIJardin
+
+		End If
+
+		If (sz_QueryTab = "IAIPelouse") Then
+		
+			Server Connexion_Number Link Table "Select * from IAIPelouse" Into IAIPelouse Map From IAIPelouse
+
+		End If
+
+		If (sz_QueryTab = "NATIONAITE") Then
+		
+			Server Connexion_Number Link Table "Select * from NATIONAITE" Into NATIONAITE Map From NATIONAITE
+
+		End If
+
+		If (sz_QueryTab = "IAISecteurs") Then
+		
+			Server Connexion_Number Link Table "Select * from IAISecteurs" Into IAISecteurs Map From IAISecteurs
+
+		End If
+
+
+		If (sz_QueryTab = "IAIZoneDeCirculation") Then
+		
+			Server Connexion_Number Link Table "Select * from IAIZoneDeCirculation" Into IAIZoneDeCirculation Map From IAIZoneDeCirculation
+
+		End If
+
+
+	Else
+
+		Exit Sub
+
+	End If
+
+error_opendata:
+	Note Error$()
+	Exit Sub
+
+End Sub
+
+sub main
+	call MonMenu
+end sub

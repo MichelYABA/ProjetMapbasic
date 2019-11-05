@@ -1,0 +1,170 @@
+include "mapbasic.def"
+'include "menu.def"
+'include "auto_lib.def"
+'include "icons.def"
+
+declare sub main
+'declare sub ajout_menu
+'declare sub cree_menu
+declare sub supprime_menu
+declare sub Menu2
+declare sub boite_dialogue
+'declare sub dialogue
+
+
+'Cette procédure permet d'ajouter les sous-menus annual report et quartely report 
+'au menu existant Query
+'sub ajout_menu
+	'alter menu "Query" add
+		'"annual report" calling report_sub,
+		'"quarterly report" calling report_sub_q
+'end sub
+
+'cette procedure perme de suprime un sous-menu Delete Table dans le menu Maintenance
+'sub supprime_menu
+	'alter menu "maintenance" remove M_TABLE_DELETE
+'end sub
+
+'cette procedure permet de créé un menu Menu Carte Simplifié
+'sub cree_menu
+'	create menu "Menu" as
+'		"layer control" calling M_MAP_LAYER_CONTROL,
+'		"previous views" calling M_MAP_PREVIOUS,
+'		"Options" calling M_MAP_OPTIONS
+'	alter menu bar add "Menu" 'Perme de rendre visible le menu créé dans la barre de menu 
+	
+'end sub
+
+sub Menu2
+	create menu "textbox" as
+		"Dav" calling create_sub,
+		"(-",
+		"Mich" calling about,
+		"Sortie" calling bye
+end sub
+
+'Cette procedure permet de créer une boite de dialogue personnalisée ki a 4 controls
+sub boite_dialogue
+	Dim s_nom,ville,langage,loisir,sex as string, variable as object, nivo as logical
+	Dialog
+		Title "Enregistement" 'Perme de donner un titre à la boite dialogue
+		Control StaticText
+			Title "Entrer Votre Nom : " 'Perme de créer le libellé du champ
+			Position 5, 10
+		Control EditText
+			Value "David Mitchel" 'Affiche une valeur par défo dans le champ
+			Into s_nom 'Perme de créer le champ
+			ID 1 'affecte l'identifian 1 à ce control
+			Position 65, 8
+			width 90 'Perme de précise la largeur du champ
+			height 10 'Préciz la hauteur du champ
+		Control GroupBox
+			Title "Sexe"
+			Position 5,30
+			width 70 height 70
+		Control RadioGroup
+			Title "&Homme;&Femme;&LesDeux"
+			Into sex
+			ID 2
+			Position 12, 42
+		'Control GroupBox
+			'Title "Outils"
+			'Position 5,30
+		Control SymbolPicker
+			
+			Position 95, 43
+			Into variable
+			ID 3
+		Control PenPicker
+			Disable
+			Position 120, 43
+			Into variable
+			ID 3
+		Control BrushPicker
+			Disable
+			Position 145, 43
+			Into variable
+			ID 3
+		Control FontPicker
+			Disable 'perme de désactiver le controle
+			Position 170, 43
+			Into variable
+			ID 3
+	Control StaticText
+			Title "Quelle est votre ville ? " 'Perme de créer le libellé du champ
+			Position 5, 100	
+	Control ListBox
+			Title "Brazzaville;Pointe Noire;Nkayi;Dolisie"
+			Value 2
+			Position 5, 110
+			Width 65 Height 35
+			Into ville
+			ID 4
+Control StaticText
+			Title "Quel langage de programmation pratiquiez-vous ? " 'Perme de créer le libellé du champ
+			Position 95, 100			
+Control MultiListBox
+			Title "java;c;c++;Vb"
+			Position 95, 110
+			Width 65 Height 35
+			Into langage
+			ID 5
+			'alter control 1 value 1			
+			'alter control 1 value 2
+Control StaticText
+			Title "C'est quoi ton passe-temps favoris ? " 'Perme de créer le libellé du champ
+			Position 5, 150			
+Control PopupMenu
+			Title "Manger;Danser;Lire"
+			value 1
+			Position 5, 160
+			Into loisir
+			ID 6
+Control StaticText
+			Title "Coche cette case si tu es expert " 'Perme de créer le libellé du champ
+			Position 140, 150			
+Control checkbox
+			Title "Expert ?"
+			Position 140, 160
+			Into nivo
+			ID 7
+		'Control Button
+			'Title "&Reset"
+			'Calling reset_sub
+			'Position 10, 170
+		Control OKButton 'Perme de créer un bouton OK
+			Position 30, 180 'Perme de doné la position du bouton OK
+		Control CancelButton 'Perme de créer un bouton Cancel
+			Position 120, 180
+	
+If CommandInfo (CMD_INFO_DLG_OK) Then
+		Note "Valeur Correcte"
+	End If			
+end sub
+
+'sub dialogue
+	'dim alpha_var as string
+	'alpha_var=""
+	'boucle:
+	'dialog title "test"
+	'control statictext title "Entrer une phrase d'au plus 10 caractères" 
+	'position 5,5
+	'control edittext value alpha_var into alpha_var position 5,15
+
+	'control okbutton
+	'if not commandinfo(1)
+	'		 then exit sub end if
+	'if len(alpha_var)>25 then
+	'	note "Phrase trop longue; raccourcissez-la de "+str$(len(alpha_var)-25)
+	'	goto boucle
+	'end if
+	'note "phrase acceptée <"+alpha_var+">"
+'end sub
+
+sub main
+	'call cree_menu
+'alter menu bar remove "Menu Carte Simplifié"
+'alter menu item M_MAP_LAYER_CONTROL disable
+'call boite_dialogue
+call Menu2
+end sub

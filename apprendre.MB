@@ -1,0 +1,51 @@
+include "mapbasic.def"
+'include "menu.def"
+include "icons.def"
+
+declare sub menus
+declare sub main
+declare sub termineprog
+declare sub suprimenu
+declare sub ouvrir_table
+declare sub donnee_region
+declare sub information
+declare sub affiche_info
+declare sub ouvrir_carte_secteur
+
+global liste_region() as string
+
+'création des menus
+sub menus
+	create menu "affiche_donnée" as
+		"AYO" calling donnee_region,
+		"Batiments" calling donnee_region
+
+	create menu "Manipulation Des Données" as
+				   "ouvrir Table" calling ouvrir_table,
+					"Afficher Données" as "affiche_donnée",
+				  "Fin du Programme" calling termineprog
+	alter menu bar add "Manipulation Des Données"
+end sub
+
+sub suprimenu
+	alter menu bar remove "File","Edit"
+end sub
+
+sub termineprog
+	end mapinfo
+end sub
+
+sub ouvrir_table
+	dim fichier as string
+	fichier=""
+	fichier=fileopendlg("","","tab","Ouvrir une table quelconque")
+end sub
+
+
+sub donnee_region
+	browse * from IAIArbres
+end sub
+	
+sub main
+	call menus
+end sub

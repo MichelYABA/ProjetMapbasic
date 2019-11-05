@@ -1,0 +1,34 @@
+include "mapbasic.def"
+include "menu.def"
+include "icons.def"
+
+include "creebouton.mb"
+
+declare sub ouvrir
+declare sub main
+declare sub message
+
+sub ouvrir
+	dim fichier as string
+	'fichier = FileOpenDlg("","DUBON","WOR","Ouvrir Document")
+	'if (fichier<>"") Then 
+	'Exécution automatique d'un document mapbasic
+	Run Application "DUBON.wor"
+	'run menu command M_FILE_OPEN
+	'End if
+end sub
+
+sub message
+	open window message 'ouverture de la fenêtre Message
+	set window Message
+		font ("Arial", 1, 10, BLUE)
+		Position (0.25, 0.25)
+		width 3.0
+		Height 1.0
+	Print "BIENVENUE DANS CE PROGRAMME"
+	print chr$(12)
+end sub
+
+sub main
+	call message
+end sub

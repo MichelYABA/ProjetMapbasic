@@ -1,0 +1,23 @@
+declare sub main
+declare sub saisie_nombre
+declare function max(byval x,y as integer) as integer
+
+function max (byval x,y as integer) as integer
+	if x>y then max=x
+		else max=y
+	end if
+end function
+
+sub saisie_nombre
+	dim nb1, nb2 as integer
+		nb1=181
+		nb2=23
+		note "le plus grand des deux nombres est :"+max(nb1,nb2)
+end sub
+
+sub main
+	create menu "Fonction max" as
+		"Maximum de 2 nombres"
+			calling saisie_nombre
+	alter menu bar add "Fonction max"
+end sub

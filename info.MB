@@ -1,0 +1,29 @@
+include "mapbasic.def"
+include "menu.def"
+
+declare sub infos
+declare sub main
+'declare sub demande
+
+sub infos
+	open table "IAISecteurs" 
+	select
+		IDsect "ID Secteur",TypeSecteur "Type Secteur",NomSecteur "Nom Secteur"
+		from IAISecteurs
+		into IAISecteurs_query
+	set window info readonly 'readonly indik ke la fenetr d'info est en à lecture seule
+		title "Infos Secteurs"
+		table IAISecteurs_query rec 1
+		font makefont ("arial", 1, 10, black, white)
+		width 3 units "in" height 1.2 units "in"
+		position (2.5, 1.5) units "in"
+		front
+end sub
+
+sub main
+	'dim s_name as string
+	'open table "IAIBatiments" interactive
+	'fetch first from IAIBatiments
+	's_name = IAIBatiments.NomBatiment
+	call infos
+end sub

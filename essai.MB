@@ -1,0 +1,104 @@
+include "MAPBASIC.def"
+
+declare sub info
+declare sub main
+declare sub distanceL
+declare sub boucle
+declare sub boucle1
+declare sub nombretable
+declare sub infotable
+declare sub boucle2
+declare sub centre
+
+sub nombretable
+	dim x as integer
+	x = numtables()
+	note "Le nombre de tables ouvertes est "+x
+end sub
+
+sub infotable
+	dim nom,x,ligne,maxx,minx,miny,maxy,num,nomcol as string, carto as logical, colone as smallint
+	nom="IAISecteurs"
+	open table "IAISecteurs"
+	nom = TAB_INFO_NAME
+	colone=COL_INFO_NUM
+	carto=TAB_INFO_MAPPABLE
+	ligne=TAB_INFO_NROWS
+	minx=TAB_INFO_MINX
+	miny=TAB_INFO_MINY
+	maxx=TAB_INFO_MAXX
+	maxy=TAB_INFO_MAXY
+	num=TAB_INFO_NUM
+	nomcol=columninfo("IAISecteurs","col1",COL_INFO_NAME)
+	x=tableinfo(TAB_INFO_NUM,TAB_INFO_NAME)
+	print "La table ouverte est la table n°:"+nom
+	print "Cette table contient "+colone+" colonnes"
+	print "carte cartographiable ? "+carto
+	print "La carte compte "+ligne+" enregistrements"
+	print "Les coordonnées X et Y de cette tables sont "+minx+";"+miny+";"+maxx+";"+maxy
+	print "le nom de la table est : "+x
+	print "Le nom de la colonne est "+nomcol
+end sub
+
+sub info
+	dim surface as float
+	open table "IAISecteurs"
+	fetch first from IAISecteurs
+	surface = CartesianArea(IAISecteurs.obj,"sq mi")
+	note "la surface de cette couche est : "+surface+" km2"
+end sub
+
+sub distanceL
+	dim dist, start_x, start_y, end_x, end_y as float
+	open table "IAISecteurs"
+	fetch first from IAISecteurs
+	start_x=centroidX(IAISecteurs.obj)
+	start_y=centroidY(IAISecteurs.obj)
+	fetch next from IAISecteurs
+	end_x=centroidX(IAISecteurs.obj)
+	end_y=centroidY(IAISecteurs.obj)
+	dist = cartesiandistance(start_x,start_y,end_x,end_y,"mi")
+	note "La distance entre les deux (2) lieu est : "+dist
+end sub
+
+sub boucle
+	dim i as integer
+	i=0
+	fetch first from IAISecteurs
+	do while not EOT(IAISecteurs)
+		'if i=(select * from IAISecteurs where TypeSecteur="Parking") then
+		i=i+1
+		'end if
+		fetch next from IAISecteurs
+	loop
+	print "Nombre d'enregistrements non "
+	print "supprimés : "+i
+end sub
+
+sub boucle1
+	open table "IAISecteurs"
+	fetch rec 3 from IAISecteurs
+	note IAISecteurs.TypeSecteur
+end sub
+
+'programme ki perme de sélectionner les région dont 
+'le typesecteur=pelouse
+sub boucle2
+	select * from IAISecteurs where TypeSecteur="Parking"
+	fetch first from selection
+	note "Il y a "+selection.col1+" régions"
+end sub
+
+sub centre
+	dim pos as object, x,y as float
+	open table "IAISecteurs"
+	fetch first from IAISecteurs
+	x = centroidX(IAISecteurs.obj)
+	y = centroidY(IAISecteurs.obj)
+	Note "les coordonnées du centroide sont :"+x+" - "+y
+	'pos=centroid(IAISecteurs.obj)
+end sub
+
+sub main
+	call infotable
+end sub

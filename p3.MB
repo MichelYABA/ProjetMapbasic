@@ -1,0 +1,32 @@
+'Exercice de manipulation des tables
+'Ouverture d'une table sans Affichage
+
+'déclaration des procédures
+declare sub main
+declare sub opentabledur
+declare sub opentable
+
+'procédure permettant d'ouvrir une table existante
+'dans le disque dur
+sub opentabledur
+	open table "IAISecteurs" 'as limites
+end sub
+
+'procédure d'ouverture d'une table avec dialogue
+sub opentable
+	dim nomfic as string
+	nomfic = fileopendlg("","","TAB","Ouvrir la Table")
+	open table nomfic
+end sub
+
+'procédure principale
+sub main
+	create menu "Gere Table" as
+		"Ouvrir table en dur"
+			helpmsg "Ouvrir une table MapInfo du disque dur"
+			calling opentabledur,
+		"Ouvrir table"
+			helpmsg "Ouvrir une table MapInfo par menu"
+			calling opentable
+	alter menu bar add "Gere Table"
+end sub

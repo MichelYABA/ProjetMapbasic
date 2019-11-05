@@ -1,0 +1,14 @@
+!table
+!version 900
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 2
+    TableName Char (31) ;
+    MaskCreation DateTime ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "0d57a9c7-4b12-4406-9c90-ce969714e7d6"
+end_metadata

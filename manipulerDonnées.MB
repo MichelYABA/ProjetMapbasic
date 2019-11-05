@@ -1,0 +1,371 @@
+include "mapbasic.def"
+
+declare sub liste1
+declare sub main
+declare sub ajoutligne
+declare sub liste2
+declare sub enregistrer
+declare sub MenuDonnées
+declare sub MenuEnregistrer
+declare sub liste3
+declare sub annulerModification
+declare sub liste4
+'declare sub compacterLigne
+declare sub liste
+declare sub tabledone
+declare sub supprimerligne
+
+sub main
+	call MenuDonnées
+	call MenuEnregistrer
+end sub
+
+sub MenuEnregistrer
+	create menu "Enregistrement" as
+		"Enregistrer Table" calling liste2
+	alter menu bar add "Enregistrement"
+end sub
+
+sub MenuDonnées
+	create menu "Manipuler Données" as
+		"Afficher/Modifier Données" as liste,
+		"Ajout Ligne" calling liste1,
+		"Annuler modifications" calling liste3
+	alter menu bar add "Manipuler Données"
+end sub
+
+sub enregistrer
+	if readcontrolvalue(1) then
+		commit table tableinfo(readcontrolvalue(1),TAB_INFO_NAME)
+	end if
+end sub
+
+sub liste1
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)	
+		next
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		control PopUpMenu
+			position 9,22
+			width 166
+			id 1
+			title from variable tablo
+			value i
+		'création bouton "Selection"
+		control Okbutton
+			title "Ajouter Ligne"
+			position 40,42
+			width 38
+			height 14
+			'id 5
+			calling ajoutligne
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 
+			HEIGHT 14
+			TITLE "Quitter"	
+	end if			
+end sub
+
+sub liste2
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)	
+		next
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		control PopUpMenu
+			position 9,22
+			width 166
+			id 1
+			title from variable tablo
+			value i
+		'création bouton "Selection"
+		control Okbutton
+			title "Enregistrer"
+			position 40,42
+			width 38
+			height 14
+			'id 5
+			calling enregistrer
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 
+			HEIGHT 14
+			TITLE "Quitter"	
+	end if			
+end sub
+
+sub liste3
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)	
+		next
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		control PopUpMenu
+			position 9,22
+			width 166
+			id 1
+			title from variable tablo
+			value i
+		'création bouton "Selection"
+		control Okbutton
+			title "Anuller"
+			position 40,42
+			width 38
+			height 14
+			'id 5
+			calling annulerModification
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 
+			HEIGHT 14
+			TITLE "Quitter"	
+	end if			
+end sub
+
+sub liste3
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)	
+		next
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		control PopUpMenu
+			position 9,22
+			width 166
+			id 1
+			title from variable tablo
+			value i
+		'création bouton "Selection"
+		control Okbutton
+			title "Supprimer"
+			position 40,42
+			width 38
+			height 14
+			'id 5
+			calling supprimerligne
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 
+			HEIGHT 14
+			TITLE "Quitter"	
+	end if			
+end sub
+
+sub supprimerligne
+	
+end sub
+
+sub tabledone	
+				Do Case tableinfo(readcontrolvalue(1),TAB_INFO_NAME)
+					case "IAISecteurs"
+							browse * from IAISecteurs
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"	
+
+					case "IAIJardin"
+							browse * from IAIJardin
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "AYO"
+							browse * from AYO
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIArbres"
+							browse * from IAIArbres
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIZoneDeCirculation"
+							browse * from IAIZoneDeCirculation
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIPelouse"
+							browse * from IAIPelouse
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIBatiments"
+							browse * from IAIBatiments
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIContour"
+							browse * from IAIContour
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case else
+							Note "PAS DE DONNEES POUR CETTE TABLE"					
+					end case		
+end sub
+
+sub liste
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)	
+		next
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		control PopUpMenu
+			position 9,22
+			width 166
+			id 1
+			title from variable tablo
+			value i
+		'création bouton "Selection"
+		control Okbutton
+			title "Voir/Modifier"
+			position 40,42
+			width 38
+			height 14
+			'id 5
+			calling tabledone
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 
+			HEIGHT 14
+			TITLE "Quitter"	
+	end if			
+end sub
+
+sub annulerModification
+	if readcontrolvalue(1) then
+		rollback table tableinfo(readcontrolvalue(1),TAB_INFO_NAME)
+	end if
+end sub
+
+sub ajoutligne
+	Do Case tableinfo(readcontrolvalue(1),TAB_INFO_NAME)
+					case "IAISecteurs"
+							insert into IAISecteurs values ("","","")
+							browse * from IAISecteurs
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+
+					case "IAIJardin"
+							insert into IAIJardin values ("","")
+							browse * from IAIJardin
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "AYO"
+							insert into AYO values ("","")
+							browse * from AYO
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIArbres"
+							insert into IAIArbres values ("","")
+							browse * from IAIArbres
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIZoneDeCirculation"
+							insert into IAIZoneDeCirculation values ("","","","","")
+							browse * from IAIZoneDeCirculation
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIPelouse"
+							insert into IAIPelouse values ("","")
+							browse * from IAIPelouse
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIBatiments"
+							insert into IAIBatiments values ("","","")
+							browse * from IAIBatiments
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case "IAIContour"
+							insert into IAIContour values ("")
+							browse * from IAIContour
+							Position (5,5) Units "cm" 
+							width 10 Units "cm" 
+							Height 10 Units "cm"
+							
+					case else
+							Note "PAS DE DONNEES POUR CETTE TABLE"					
+					end case		
+
+end sub

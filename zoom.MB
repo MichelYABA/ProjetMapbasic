@@ -1,0 +1,58 @@
+include "mapbasic.def"
+include "menu.def"
+include "icons.def"
+
+declare sub zoomcouche
+declare sub main
+
+sub zoomcouche
+	dim ntable as integer
+	's'il n'ya pa de selection la procedure s'arrete
+	if selectioninfo(SEL_INFO_TABLENAME)="" Then
+		Note "Pas de Sélection"
+		exit sub
+	end if
+	'Si la sélection n'est pas cartographiable la procedure sarrete
+	if not tableinfo(selectioninfo(SEL_INFO_TABLENAME),TAB_INFO_MAPPABLE) Then
+		Note "La sélection n'est pas cartographiable"
+		exit sub
+	end if
+	'on récupere le nbre de tables ouverte dans une variable ntable
+	ntable=numtables()
+	'on integr la sélection courante dans une couche à part
+	'de maniere à zoome entierement dessus
+	select * from selection into table_select
+	'on rajoute la couche à la fenetr carte
+	add map layer table_select
+	'on zoome entieremen sur la couche corespondan à la selection
+	'effectuee
+	set map zoom entire layer table_select
+	'on referme cette couche
+	close table table_select
+	if numtables()>ntable Then
+		close table TableInfo(numtables(),TAB_INFO_NAME)
+	end if
+	'code permetan de tou deselectione
+	run menu command 304
+end sub
+
+sub main
+	create buttonpad "Zoom" as
+		toolbutton calling zoomcouche
+		icon MI_ICON_ZOOM_IN
+		cursor MI_CURSOR_ZOOM_IN
+		drawmode DM_CUSTOM_POINT
+		'helpmsg "clique sur un endroit de la carte\nClick a location"
+	'Separator
+		'toolbutton calling outils ID 2
+		'icon MI_ICON_SEARCH_RECT
+		'cursor MI_CURSOR_FINGER_LEFT
+		'drawmode DM_CUSTOM_RECT
+		'helpmsg "Dessine un rectangle sur la carte\nDrag a rectangle"
+	width 3
+	'print "Choisir un outil dans la barre de recherche"
+	'print "Et cliquer sur une carte."
+	'print ""
+	'print ""
+
+end sub

@@ -1,0 +1,382 @@
+!Workspace
+!Version  950
+!Charset WindowsLatin1
+Open Table "iai.TAB" As iai Interactive
+Open Table "Institut4.TAB" As Institut4 Interactive
+Open Table "Autres" As Autres Interactive
+Open Table "IAIStades" As IAIStades Interactive
+Open Table "IAIZoneDeCirculation" As IAIZoneDeCirculation Interactive
+Open Table "IAIArbres" As IAIArbres Interactive
+Open Table "IAISecteurs" As IAISecteurs Interactive
+Open Table "IAIPelouse" As IAIPelouse Interactive
+Open Table "IAIBatiments" As IAIBatiments Interactive
+Open Table "SITE" As SITE Interactive
+Map From IAIArbres,IAIZoneDeCirculation,
+  IAIStades,IAIBatiments,IAIPelouse,IAIStades,Autres,IAISecteurs,SITE,Institut4 
+  Position (2.10833,-1.15833) Units "in"
+  Width 8.175 Units "in" Height 5.45 Units "in" 
+Set Window FrontWindow() ScrollBars Off Autoscroll On Enhanced On Smooth Text Antialias Image High
+Set Map
+  CoordSys Earth Projection 8, 104, "m", 9, 0, 0.9996, 500000, 0
+  Center (553537.3225,40853.64527)
+  Zoom 0.9970632245 Units "km"
+  Preserve Zoom Display Zoom
+  Distance Units "km" Area Units "sq km" XY Units "m"
+shade 8 with TypeSecteur values 
+  "Administration" Brush (2,10506240,16777215) Pen (1,2,0) ,
+  "Aires de Jeux" Brush (52,0,16774352) Pen (1,2,0) ,
+  "Autres" Brush (2,16768208,16777215) Pen (1,2,0) ,
+  "Logement Etudiant" Brush (2,13684991,16777215) Pen (1,2,0) ,
+  "Logement Personnel" Brush (2,32896,16777215) Pen (1,2,0) ,
+  "Réunion et Formations" Brush (2,13693183,16777215) Pen (1,2,0) ,
+  "Salles de cours" Brush (2,11796288,16777215) Pen (1,2,0) ,
+  "Zone Potagère" Brush (62,0,32768) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+shade 7 with Nom values 
+  "Zone Contentieux AYO" Brush (2,0,16777215) Pen (1,2,0) ,
+  "Zone de jardin" Brush (2,53248,16777215) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+shade 5 with NomPelouse values 
+  "Pelouse Admnistration" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Amphi-CC-Salles_De_Formation_2_3" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Amphi-Parking_AMPHI" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse B1-B2-Salles_De_Formation_1" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse B2-B3" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Batiment2_Formation-B3" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Batiment_B-Salles de formation2" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Derrière_CC-Parking_Chateau" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Maison Intendant" Brush (53,0,5308328) Pen (1,2,0) ,
+  "Pelouse Salle_De_Formation_1" Brush (53,0,5308328) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+shade 4 with NomBatiment values 
+  "AMPHITHEATRE (AP2)" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "B1" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "B2" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "B3" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BANGOS" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BATIMENT 1 ADMINISTRATION" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BATIMENT 1 FORMATION ET REUNIONS" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BATIMENT 2 ADMINISTRATION" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BATIMENT 2 FORMATION ET REUNIONS" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BLOC DE CLASSE 2" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BLOC DE CLASSE 3" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "BLOC DE CLASSES 1" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "CENTRE DE CALCULS" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "CHATEAU A" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "CHATEAU B" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "DALLAS" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "KABOUL" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "MAISON CHAUFFEUR" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "MAISON GARDIEN" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "MAISON INTENDANT" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "Restaurant CNOU" Brush (2,7368816,16777215) Pen (1,2,0) ,
+  "VISTA" Brush (2,7368816,16777215) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+shade 3 with NomStade values 
+  "Stade Basket-Ball" Brush (15,0,12632256) Pen (1,2,0) ,
+  "Stade Foot-Ball" Brush (155,0,24576) Pen (1,2,0) ,
+  "Stade Volley Ball" Brush (15,0,12632256) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+shade 2 with TypeZone values 
+  "Parking" Brush (53,0,12632256) Pen (1,2,0) ,
+  "route" Brush (2,16777215,16777215) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+shade 1 with IDArbres values 
+  1 Brush (2,20480,16777215) Pen (1,2,0) ,
+  2 Brush (2,20480,16777215) Pen (1,2,0) ,
+  3 Brush (2,20480,16777215) Pen (1,2,0) ,
+  4 Brush (2,20480,16777215) Pen (1,2,0) ,
+  5 Brush (2,20480,16777215) Pen (1,2,0) ,
+  6 Brush (2,20480,16777215) Pen (1,2,0) ,
+  7 Brush (2,20480,16777215) Pen (1,2,0) ,
+  8 Brush (2,20480,16777215) Pen (1,2,0) ,
+  9 Brush (2,20480,16777215) Pen (1,2,0) ,
+  10 Brush (2,20480,16777215) Pen (1,2,0) ,
+  11 Brush (2,20480,16777215) Pen (1,2,0) ,
+  12 Brush (2,20480,16777215) Pen (1,2,0) ,
+  13 Brush (2,20480,16777215) Pen (1,2,0) 
+  default Brush (1,0,16777215) Pen (1,2,0)   # color 1 # 
+Set Map Layer 0 Selectable
+Set Map
+  Layer 1
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 2
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With TypeArbres
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+  Layer 3
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 4
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With Nom_Zone
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+  Layer 5
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 6
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With NomStade
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+  Layer 7
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 8
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With NomBatiment
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+  Layer 9
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 10
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With NomPelouse
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+  Layer 11
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line Arrow Position Right Font ("Arial",0,9,0) Pen (1,2,0) 
+      With NomStade
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+  Layer 12
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 13
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,11,16777215,0) Pen (1,2,0) 
+      With Nom
+      Parallel On Auto On Overlap Off Duplicates On Offset 2
+      Visibility On
+   Object 2 Line Arrow Anchor (553379.62147515907,40827.559668670605) Angle 14.8 
+   Object 1 Visibility Off
+  Layer 14
+    Display Value
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+  Layer 15
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line Arrow Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With TypeSecteur
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On LabelAlpha 229
+   Object 8 Anchor (553743.68374667049,40989.816641734447) Visibility Off
+   Object 12 Angle 313.9 Visibility Off
+   Object 2 Angle 22.1 Visibility Off
+   Object 11 Line Arrow Anchor (553552.94912226044,40863.612330255928) Visibility Off
+   Object 7 Anchor (553564.81489220227,40958.553005356931) Angle 346.6 Visibility Off
+   Object 10 Anchor (553593.8814933456,41048.264744792628) Visibility Off
+   Object 6 Anchor (553511.29111687723,40978.84887419171) Angle 347.2 Visibility Off
+   Object 5 Line Arrow Anchor (553409.29002293607,40933.678068578149) Angle 341.8 Visibility Off
+   Object 1 Anchor (553339.34877161763,40875.189973660199) Angle 19.6 Visibility Off
+   Object 4 Anchor (553320.20192116231,40779.25950002981) Angle 24.6 Visibility Off
+  Layer 16
+    Display Graphic
+    Global Pen (1,2,0) Brush (2,16777215,16777215) Symbol (35,0,12) Line (1,2,0) Font ("Arial",0,9,0)
+    Label Line None Position Center Font ("Arial",0,9,0) Pen (1,2,0) 
+      With nomSite
+      Parallel On Auto Off Overlap Off Duplicates On Offset 2
+      Visibility On
+   Object 1 Anchor (553475.08361457358,40814.142399716773) Visibility Off
+  Layer 17
+    Display Off
+    Global Pen (1,2,0)  Brush (2,16777215,16777215)  Symbol (35,0,12)  Line (1,2,0)  Font ("Arial",0,9,0)
+    Selectable Off
+    Zoom (0.0039, 1.6) Units "km" 
+  contrast 50 
+  brightness 50 
+  alpha 255 
+    transparency off 
+  color 0 
+    grayscale off 
+Set Map Layer 8 Editable
+set legend 
+  layer 1 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count off 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off  
+set legend 
+  layer 3 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count off 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display on ,
+      auto display on  
+set legend 
+  layer 5 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count on 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display on ,
+      auto display on ,
+      auto display on  
+set legend 
+  layer 7 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count off 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off  
+set legend 
+  layer 9 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count off 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off ,
+      auto display off  
+set legend 
+  layer 12 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count off 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display on ,
+      auto display on  
+set legend 
+  layer 14 
+    display on 
+    shades on 
+    symbols off 
+    lines off 
+    count off 
+    title auto Font ("Arial",0,9,0)
+    subtitle auto Font ("Arial",0,8,0)
+    ascending on 
+    ranges Font ("Arial",0,8,0)
+      auto display off ,
+      auto display on ,
+      auto display on ,
+      auto display on ,
+      auto display on ,
+      auto display on ,
+      auto display on ,
+      auto display on ,
+      auto display on  
+Set Window FrontWindow() Printer
+ Name "Foxit Reader PDF Printer" Orientation Portrait Copies 1
+ Papersize 9
+Create Cartographic Legend
+  Position (7.875,0.25) Units "in"
+  Width 2.9 Units "in" Height 4.06667 Units "in" 
+  Window Title "Legend of IAIArbres,...,Institut4 Map"
+  Portrait
+  Style Size Large
+  Frame From Layer 1
+    Border Pen (0,1,0) 
+  Frame From Layer 5
+    Border Pen (0,1,0) 
+  Frame From Layer 9
+    Border Pen (0,1,0) 
+  Frame From Layer 12
+    Border Pen (0,1,0) 
+  Frame From Layer 7
+    Border Pen (0,1,0) 
+Set Window FrontWindow() Printer
+ Name "Nitro PDF Creator (Pro 8)" Orientation Portrait Copies 1
+ Papersize 9

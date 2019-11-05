@@ -1,0 +1,14 @@
+!table
+!version 500
+!charset WindowsLatin1
+
+Definition Table
+  Type ODBC
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\DATALINK" = ""
+"\DATALINK\Query" = "select * from IAIBATIMENTS"
+"\DATALINK\ConnectionString" = "DSN=BASESIG;DBQ=A:\A ETUDIER\FINAL2\IAIBaseDeDonnée.accdb;DriverId=25;FIL=MS Access;MaxBufferSize=2048;PageTimeout=5;"
+"\CACHE" = "ON"
+"\MBRSEARCH" = "ON"
+end_metadata

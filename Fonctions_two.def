@@ -1,0 +1,68 @@
+Include "MAPBASIC.DEF"
+
+'============================================================================
+'ZONE DECLARATIVE DES FONCTIONS, PROCEDURES, VARIABLES
+'============================================================================
+
+	'Fenêtre splash
+	Declare Sub Frm_splash
+	Declare Sub Splash
+
+	Dim iResponse As Integer
+'===========================================================================
+'===========================================================================
+' ZONE DES FONCTIONS
+'===========================================================================
+
+'===========================================================================
+'----------------------------------------------------
+'Fenêtre de splash
+'----------------------------------------------------
+Sub Frm_splash
+
+Dim sym_marker As Symbol
+
+OnError GoTo error_load_frm_splash
+	
+	sym_marker = MakeCustomSymbol("logo.BMP",WHITE,18,4)
+		
+	DIALOG
+		WIDTH 310 HEIGHT 160
+
+	Control OKButton
+		Title "DEMARRER LE PROGRAMME"
+		Id 1
+		CALLING Splash
+		Position 194, 146
+		
+   	Control SymbolPicker
+    	WIDTH 312 HEIGHT 162
+		Position 0, 0
+		Value sym_marker
+		Disable
+		ID 0
+		
+error_load_frm_splash:
+	Exit Sub
+
+End Sub
+	
+'===========================================================================
+'----------------------------------------------------
+'Programme de gestion du splash
+'----------------------------------------------------
+Sub Splash
+
+OnError GoTo error_splash
+
+	If (CMD_INFO_DLG_OK) Then
+			
+			run application "DUBON.WOR"
+					
+	End If
+
+error_splash:
+	Exit Sub
+
+End Sub
+

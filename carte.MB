@@ -1,0 +1,38 @@
+include "mapbasic.def"
+
+declare sub carte
+declare sub main
+declare sub done
+declare sub graf
+declare sub couche
+
+sub carte
+	map from IAISecteurs, IAIBatiments, IAIZoneDeCirculation, IAIArbres
+	'l'instruction map from IAISecteurs perme douvrir une fenetr de carte compose d table IAISecteurs 
+end sub
+
+sub done
+	browse * from IAISecteurs row 5 column 2 
+'perme d'afiche ttes les colones dune fenetr de done IAISecteurs et selectionne la 5eme ligne
+'de la 2emme colone
+end sub
+
+sub graf
+	graph IDsect,1 from IAISecteurs
+'perme dafiche un graphe dont le titre est IDsect et la valeur est 1
+end sub
+
+'sub couche
+	'layout PARLEMENT from IAIBatiments
+'end sub
+
+sub main
+	call carte
+	'shade 'permet de créer une carte thématike
+	'add map layer 'perme dajoute une couche dans une fenetr carte
+	'remove 'perme de suprime une carte dans une fenetr carte
+	'set map 'perme dafecter ds propriete à la carte
+	'call done
+	'call graf
+	'call couche
+end sub

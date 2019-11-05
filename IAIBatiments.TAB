@@ -1,0 +1,14 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  Type NATIVE Charset "WindowsLatin1"
+  Fields 2
+    IDbatiment Integer Index 1 ;
+    NomBatiment Char (60) Index 2 ;
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "b0e1eea1-3779-4341-a112-fd2f565ba39a"
+end_metadata

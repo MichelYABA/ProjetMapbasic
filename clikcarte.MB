@@ -1,0 +1,57 @@
+include "mapbasic.def"
+include "icons.def"
+
+declare sub main
+declare sub outil
+declare sub carte
+declare sub couche
+
+sub main
+	create buttonpad "Selection" as
+		toolbutton calling outil ID 1
+		icon MI_ICON_ARROW
+		cursor MI_CURSOR_ARROW
+		drawmode DM_CUSTOM_POINT
+		helpmsg "clique sur un endroit de la carte\nClick a location"
+		'call carte
+	separator
+	width 2
+end sub
+
+sub carte
+	'open table "IAIBatiments"
+	'open table "IAISecteurs" 'as customers
+	map from IAIArbres'IAISecteurs,IAIBatiments
+		position (1,1) width 5 height 2
+end sub
+
+sub couche
+	open table "cosmetic"
+	map from cosmetic
+		open table "IAIBatiments" 'as customers
+	add map auto layer IAIBatiments
+end sub
+
+sub outil
+	Dim x, y, x2, y2 as float
+	Dim i, Nobjet, IDcarte, IDligne,j,k as integer
+	Dim NomTab as alias
+	IDcarte = frontwindow()
+	if windowInfo(IDcarte, WIN_INFO_TYPE)<> WIN_MAPPER Then
+		note "Cet outil ne fonctionne que sur une fenêtre carte"
+		exit sub
+	end if
+	x = commandInfo (CMD_INFO_X)
+	y = commandInfo(CMD_INFO_Y)
+	if commandInfo(CMD_INFO_TOOLBTN)=1 Then
+			Nobjet = searchPoint(IDcarte, x, y)
+	End if
+	if Nobjet=0 Then
+		Beep 'Pas d'objets trouvés d'où l'utilisateur a cliké
+		Note "Aucun objet trouvé !"
+	Else
+		if commandInfo(CMD_INFO_TOOLBTN)=1 Then
+			call carte
+		end if
+	end if
+end sub

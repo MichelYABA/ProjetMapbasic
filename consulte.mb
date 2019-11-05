@@ -1,0 +1,227 @@
+'*************************************************************************************************************
+'*       PROGRAMME DE CREATION BOUTONS PERMETTANT DE DESIGNER UN POINT SUR UNE FENETRE CARTE        *
+'*************************************************************************************************************
+
+'-------------------------------------------------------------------------------------------------------------
+'              APPEL DES BIBLIOTHEQUES MAPBASIC
+include "mapbasic.def"
+include "icons.def"
+'include "MENU.DEF"
+
+
+
+'-------------------------------------------------------------------------------------------------------------
+'                   DECLARATION DES PROCEDURES
+declare sub localise
+declare sub créeboutons
+declare sub identifie
+declare sub main
+declare sub MenuConsulter
+declare sub MenuGestion
+declare sub liste4
+declare sub compactertable
+'-------------------------------------------------------------------------------------------------------------
+'                      CREATION DES PROCEDURES
+'-------------------------------------------------------------------------------------------------------------
+
+'-------------------------------------------------------------------------------------------------------------
+'                  		PROCEDURE PRINCIPALE
+
+sub main
+	call MenuConsulter
+	call MenuGestion
+end sub
+
+sub MenuGestion
+	create menu "Gerer Carte" as
+		"Modifier Structure d'une Table" calling 404,
+		"Supprimer Une Table" calling 409,
+		"Renommer Une Table" calling 410,
+		"Compacter Table" calling liste4
+	alter menu bar add "Gerer Carte"	
+end Sub
+
+sub MenuConsulter
+	create menu "Consulter Patrimoine" as
+		"Identifier Patrimoine" calling identifie,
+		"Localiser Patrimoine" calling créeboutons
+	alter menu bar add "Consulter Patrimoine"	
+end sub
+
+sub créeboutons
+	
+	create buttonpad "Searcher" as
+		toolbutton calling localise ID 1
+		icon MI_ICON_ARROW_19
+		cursor MI_CURSOR_ARROW
+		drawmode DM_CUSTOM_POINT
+		helpmsg "clique sur un endroit de la carte\nLocalise un endroit"
+	Separator
+		toolbutton calling localise ID 2
+		icon MI_ICON_SEARCH_RECT
+		cursor MI_CURSOR_FINGER_LEFT
+		drawmode DM_CUSTOM_RECT
+		helpmsg "Dessine un rectangle sur la carte\nDrag a rectangle"
+	width 3
+	print "Choisir un outil dans la barre de recherche"
+	print "Et cliquer sur une carte."
+	print ""
+	print ""
+end sub
+
+sub identifie
+	create buttonpad "Identifie" as
+		toolbutton 
+		icon MI_ICON_ARROW
+		calling 1701 
+		helpmsg "Sélectionne ou Pointe Sur L'élément à identifier\nPointes sur l'endroit à identifier"
+end sub
+
+'------------------------------------------------------------------------------------------------------------
+'					PROCEDURE DE CREATION DES BOUTONS
+
+	'cette procédure est appelée qd l'utilisateur choisi un des boutons de la barre de recherche
+sub localise
+	
+	'Déclaration des variables
+	Dim x, y, x2, y2 as float
+	Dim i, Nobjet, IDcarte, IDligne as integer
+	Dim NomTab as alias
+	Dim nbcol,j,k as smallint
+
+	IDcarte = frontwindow()'affectation de l'identifiant de la fenètre active grace à la fonction frontwindow()
+	if windowInfo(IDcarte, WIN_INFO_TYPE)<> WIN_MAPPER Then
+		note "Cet outil ne fonctionne que sur une fenêtre carte"
+		exit sub
+	end if
+	'Détermine le debut du point où l'utilisateur a cliqué
+	x = commandInfo (CMD_INFO_X)
+	y = commandInfo(CMD_INFO_Y)
+	if commandInfo(CMD_INFO_TOOLBTN)=1 Then 'Alors l'utilisateur a choisi un outil Point-mode
+		Nobjet = searchPoint(IDcarte, x, y) 'Détermine combien des objets sont au point choisi
+		'Searchpoint() recherche pour une carte les objets à la position x/y 
+		'IDcarte est l'ID de la fenètr carte ID
+		'x correspond à la coordonnée x - la longitude
+		'y correspond à la coordoné y - la latitude
+		'cette fonction retourne un entier ki représente le nbre des objets trouvés
+		'print "Nombre d'objets trouvés : "+Nobjet
+	Else
+		'l'utilisateur est entrain d'utiliser l'outil Rectangle-mode. Détermine les objets qui sont dans le rectangle
+		x2 = CommandInfo(CMD_INFO_X2)
+		y2 = CommandInfo(CMD_INFO_Y2)
+		Nobjet = searchRect(IDcarte, x, y, x2, y2)
+		'Searchrect recherche des objets contenu dans une sélection de rectangle
+		'print "Nombre d'objets trouvés : "+Nobjet
+	End if
+	if Nobjet=0 Then
+		Beep 
+		Note "Aucun Objet n'est sélectionné"
+		'Pas d'objets trouvés d'où l'utilisateur a cliké
+		'beep perme de faire un son beep
+	Else
+		Print chr$(12)
+		'chr$(12) perme d'effacé le contenu de la fenêtre message
+		if commandinfo(CMD_INFO_TOOLBTN)=2 Then
+			print "Coordonnées des Points du Rectangle : x1= "+ x + ", y1= "+y
+			print "x2= "+ x2 + ", y2= "+ y2
+		Else
+			print "Vous êtes au  : "
+			Print "     "+"- Point de Coordonnées : x=" + x + ", y= " + y
+		End if
+		
+		'Procédure des résultats de recherche
+		for i=1 to Nobjet
+			'Obtenir le nom de la table contenant un "hit"
+			NomTab=searchInfo(i, SEARCH_INFO_TABLE)
+			'searchinfo() retourne l'information sur le résultat de recherche produi par les fonctions searchpoint() et searchrect()
+			'i est un nombre entier allant de 1 au nombre d'obje trouvé
+			'searchinfo() renvoi une chaine ou un entier dépendan de l'atribu SEARCH_INFO_TABLE
+			'SEARCH_INFO_TABLE est un attribut ki renvoi le nom de la chaine contenant les objets
+			'print "          "+"Le Secteur "+NomTab
+			'Obtenir la ligne de l'ID de l'objet ki était un hit
+			IDligne=searchinfo(i, SEARCH_INFO_ROW)
+			If left$(NomTab, 8)="Cosmetic" Then
+				Print "Object dans la couche Dessin"
+			Else
+				'On Cherche la ligne de l'objet d'où l'utilisateur a cliké
+					Do Case NomTab
+						Case IAIArbres
+							fetch rec IDligne from NomTab
+							NomTab=NomTab+".col2"
+							print "             "+"- Sur l'arbre "+NomTab
+						Case IAIJardin
+							fetch rec IDligne from NomTab
+							NomTab=NomTab + ".col2"
+							print "             "+"- Dans le "+NomTab
+						Case Ayo
+							fetch rec IDligne from NomTab
+							NomTab=NomTab + ".col2"
+							print "             "+"- Dans la "+NomTab
+						Case IAIZoneDeCirculation
+							fetch rec IDligne from NomTab
+							NomTab=NomTab + ".col2" 
+							print "             "+"- Sur "+NomTab
+						Case IAIBatiments
+							fetch rec IDligne from NomTab
+							NomTab=NomTab + ".col2"
+							print "             "+"- Dans "+NomTab
+						Case IAISecteurs 
+							fetch rec IDligne from NomTab
+							NomTab=NomTab + ".col3"
+							print "             "+"- De la Zone "+NomTab
+						Case IAIPelouse
+							fetch rec IDligne from NomTab
+							NomTab=NomTab + ".col2"
+							print "             "+"- Dans "+NomTab
+					End Case	
+			End if
+		Next
+	End if
+	print ""
+end sub
+
+sub liste4
+	dim tablo() as string
+	dim i as smallint
+	'Vérification du nombre de tables ouvertes
+	if numtables()=0 then
+		note "Aucune table n'est ouverte"
+	else
+	'redimensionnement du tableau au nombre de tables ouvertes
+		redim tablo (numtables())
+		for i=1 to numtables()
+			tablo(i)=tableinfo(i,TAB_INFO_NAME)	
+		next
+	'création d'un formulaire contenant une liste déroulante, un bouton Sélection 
+	'et un bouton quitter
+	dialog
+		Control StaticText
+		title "Veuillez choisir une table à afficher"
+		Position 5,10
+		control PopUpMenu
+			position 9,22
+			width 166
+			id 1
+			title from variable tablo
+			value i
+		'création bouton "Selection"
+		control Okbutton
+			title "Compacter"
+			position 40,42
+			width 38
+			height 14
+			'id 5
+			calling compactertable
+		CONTROL CancelButton
+			POSITION 113, 42
+			WIDTH 38 
+			HEIGHT 14
+			TITLE "Quitter"	
+	end if			
+end sub
+
+sub compactertable
+	if readcontrolvalue(1) then
+		Pack table tableinfo(readcontrolvalue(1),TAB_INFO_NAME)
+	end if
+end sub

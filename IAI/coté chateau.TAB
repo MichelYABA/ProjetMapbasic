@@ -1,0 +1,17 @@
+!table
+!version 300
+!charset WindowsLatin1
+
+Definition Table
+  File "coté chateau.jpg"
+  Type "RASTER"
+  (0,1) (0,0) Label "Pt 1",
+  (1,1) (1,0) Label "Pt 2",
+  (0,0) (0,1) Label "Pt 3"
+  CoordSys NonEarth Units "ft"
+  Units "ft"
+begin_metadata
+"\IsReadOnly" = "FALSE"
+"\MapInfo" = ""
+"\MapInfo\TableID" = "fc0cce99-1cba-4748-b10a-f07030fd64d0"
+end_metadata

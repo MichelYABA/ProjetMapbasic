@@ -1,0 +1,17 @@
+declare sub addsub
+declare sub editsub
+declare sub delsub
+declare sub main
+
+
+sub main
+create menu "DataEntry" as
+	"Add" calling addsub,
+	"Edit" calling editsub,
+	"Delete" ID 100 calling delsub,
+	"Delete All" ID 101 calling delsub 
+	'deplace le menu Help
+	alter menu bar remove ID 7
+	'Ajoute les 2 menus DateEntry et Help
+	alter menu bar add "DataEntry", ID 7
+end sub
